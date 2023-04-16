@@ -1169,7 +1169,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #737325;
+  background: #7affff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2291,7 +2291,7 @@ embed {
   white-space: nowrap;
 }
 body {
-  background: url("https://steamcommunity.com/sharedfiles/filedetails/?id=2547718988");
+  background: url("D:Blogthemesnextsourcebackground.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
