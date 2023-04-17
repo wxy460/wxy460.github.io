@@ -199,7 +199,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2023-04-17 15:15:35 / 修改时间：15:39:25" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:35+08:00">2023-04-17</time>
+              <time title="创建时间：2023-04-17 15:15:35 / 修改时间：15:42:13" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:35+08:00">2023-04-17</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -267,7 +267,7 @@ i^{-1}\equiv\left\{
     1,&amp;if\,i=1\\
     -[\frac{p}{i}](p\,mod\,i)^{-1},&amp;otherwise.
     \end{array}
-\right.&amp;(mod\;p)
+\right.\;\;\;\;\;(mod\;p)
 \]</span> 代码</p>
 <figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inv[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">  inv[i] = (<span class="type">long</span> <span class="type">long</span>)(p - p / i) * inv[p % i] % p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><strong>任意n个数的逆元</strong></p>
