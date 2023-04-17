@@ -174,6 +174,616 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83/" class="post-title-link" itemprop="url">乘法逆元</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:15:35 / 修改时间：15:24:42" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:35+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="乘法逆元"><a href="#乘法逆元" class="headerlink" title="乘法逆元"></a>乘法逆元</h4><p>线性同余方程$ax\equiv1(mod,b)$</p>
+<p>此时称$x$为$a$在$mod,b$意义下的逆元，记作$a^{-1}$</p>
+<p>求法</p>
+<ol>
+<li>$(a,b)&#x3D;1$</li>
+</ol>
+<p>可用扩展欧几里得算法（exgcd），求$xa+yb&#x3D;1$的解即可</p>
+<ol start="2">
+<li>$(a,b)&#x3D;1$且b为质数</li>
+</ol>
+<p>$ax\equiv1\equiv{a^{b-1}}(mod,b)$</p>
+<p>$x\equiv{a^{b-2}}$</p>
+<p>可用快速幂</p>
+<ol start="3">
+<li>线性求逆元</li>
+</ol>
+<p><strong>1~n</strong></p>
+<p>这里指的是1到n的逆元一起求，显然用之前的方法会有可能超时</p>
+<p>这里用递推式解决</p>
+<p>设求1到n在$mod,p$的逆元，p是大质数</p>
+<p>$p&#x3D;ki+j,k&#x3D;\frac{p}{i},j&#x3D;p,mod,i$</p>
+<p>则有$ki+j\equiv0(mod,p)$</p>
+<p>同乘$i^{-1}\times{j^{-1}}$</p>
+<p>得到$i^{-1} \equiv-k j^{-1}(\bmod p)$</p>
+<p>即$i^{-1} \equiv-\left\lfloor\frac{p}{i}\right\rfloor(p \bmod i)^{-1}(\bmod p)$</p>
+<p>考虑到$p,mod,i&lt;i$，可以用递推解决<br>$$<br>i^{-1}\equiv\left{<br>    \begin{array}{<strong>lr</strong>}<br>    1,&amp;if,i&#x3D;1\<br>    -<a href="p,mod,i">\frac{p}{i}</a>^{-1},&amp;otherwise.<br>    \end{array}<br>\right.&amp;&amp;(mod;p)<br>$$<br>代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inv[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">  inv[i] = (<span class="type">long</span> <span class="type">long</span>)(p - p / i) * inv[p % i] % p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>任意n个数的逆元</strong></p>
+<p>可以用前缀积去处理</p>
+<p>假设我们要求$A&#x3D;{a_1,a_2,…,a_n}$的逆元</p>
+<p>我们处理出前缀积$S&#x3D;{s_1,s_2,…,s_n}$</p>
+<p>求$s_n$的逆元$sv_n$，$sv_n$乘$a_n$为$sv_{n-1}$，同理处理出所有$sv_i$</p>
+<p>故$a_i^{-1}&#x3D;sv_i*s_{i-1}$</p>
+<p>代码</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) s[i] = s[i - <span class="number">1</span>] * a[i] % p;</span><br><span class="line">sv[n] = <span class="built_in">qpow</span>(s[n], p - <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) sv[i - <span class="number">1</span>] = sv[i] * a[i] % p;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) inv[i] = sv[i] * s[i - <span class="number">1</span>] % p;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E8%B4%B9%E9%A9%AC%E5%B0%8F%E5%AE%9A%E7%90%86-%E6%AC%A7%E6%8B%89%E5%AE%9A%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E8%B4%B9%E9%A9%AC%E5%B0%8F%E5%AE%9A%E7%90%86-%E6%AC%A7%E6%8B%89%E5%AE%9A%E7%90%86/" class="post-title-link" itemprop="url">费马小定理&&欧拉定理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:15:17 / 修改时间：15:24:00" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:17+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="费马小定理-amp-amp-欧拉定理"><a href="#费马小定理-amp-amp-欧拉定理" class="headerlink" title="费马小定理&amp;&amp;欧拉定理"></a>费马小定理&amp;&amp;欧拉定理</h4><ol>
+<li>费马小定理是模数为质数的欧拉定理，也就是说，欧拉定理是强化版，可直接证明到费马小定理。</li>
+</ol>
+<p>若p为质数，$gcd(a,p)&#x3D;1$，则$a^{p-1}\equiv1(mod,p)$</p>
+<blockquote>
+<p>证明：</p>
+<pre><code>思路，用p的完全剩余系去乘a
+
+设一个质数为p，我们取一个不为p倍数的数a，
+
+构造一个序列：A=&#123;1，2，3，...，p-1&#125;，
+
+先证明这个$\Pi_&#123;i=1&#125;^&#123;p-1&#125;A_i\equiv\Pi_&#123;i=1&#125;^&#123;p-1&#125;&#123;A_i\times&#123;a&#125;&#125;(mod\,p)$
+
+由于$(A_i,p)=1,(A_i\times&#123;a&#125;,p)=1$，
+
+再加上$A_i\times&#123;a&#125;(mod\,p)&lt;p$,$A_i\times&#123;a&#125;(mod\,p)$又各不相同（假设相同会推出矛盾），
+
+故引理成立
+
+又因为$\Pi_&#123;i=1&#125;^&#123;p-1&#125;A_i$和p互质，所以两边约成$a^&#123;p-1&#125;\equiv1(mod\,p)$
+</code></pre>
+</blockquote>
+<ol start="2">
+<li>接下来是欧拉定理的证明：</li>
+</ol>
+<p>若$(a,m)&#x3D;1$，则$a^{\varphi(m)}\equiv1(mod,m)$</p>
+<blockquote>
+<p>证明：</p>
+<pre><code>思路，用m的简化剩余系去乘a
+
+构造一个序列：$r=&#123;r1,r2,r3,...,r_&#123;\varphi_&#123;(m)&#125;&#125;&#125;$
+
+同样可以证明到：$\Pi_&#123;i=1&#125;^&#123;\varphi_&#123;(m)&#125;&#125;r_i\equiv\Pi_&#123;i=1&#125;^&#123;\varphi_&#123;(m)&#125;&#125;&#123;r_i\times&#123;a&#125;&#125;(mod\,m)$
+
+同样可以化简到$a^&#123;\varphi(m)&#125;\equiv1(mod\,m)$
+</code></pre>
+</blockquote>
+<ol start="3">
+<li>扩展欧拉定理</li>
+</ol>
+<p>$a^{b} \equiv\left{\begin{array}{ll}<br>a^{b \bmod \varphi(m)}, &amp; \operatorname{gcd}(a, m)&#x3D;1, \<br>a^{b}, &amp; \operatorname{gcd}(a, m) \neq 1, b&lt;\varphi(m), \quad(\bmod m) \<br>a^{(b \bmod \varphi(m))+\varphi(m)}, &amp; \operatorname{gcd}(a, m) \neq 1, b \geq \varphi(m) .<br>\end{array}\right.$</p>
+<p>俗称降幂公式</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E7%AD%9B%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E7%AD%9B%E6%B3%95/" class="post-title-link" itemprop="url">筛法</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:15:03 / 修改时间：15:22:54" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:03+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="筛法"><a href="#筛法" class="headerlink" title="筛法"></a>筛法</h4><ol>
+<li>埃氏筛法</li>
+</ol>
+<p>筛掉质数的倍数</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> LL;</span><br><span class="line"></span><br><span class="line">vector&lt;LL&gt; is_prime,prime;</span><br><span class="line"></span><br><span class="line"><span class="function">LL <span class="title">sieve</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    is_prime=<span class="built_in">vector</span>&lt;LL&gt;(n+<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">    is_prime[<span class="number">0</span>]=is_prime[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(LL i=<span class="number">2</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(is_prime[i])&#123;</span><br><span class="line">            prime.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="keyword">for</span>(LL j=i*i;j&lt;=n;j+=i)&#123;</span><br><span class="line">                is_prime[j]=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> prime.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>分块优化空间复杂度</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">count_primes</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> S=<span class="number">1e4</span>;</span><br><span class="line">    <span class="type">int</span> ret=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">//筛sqrt(n)中的质数并记录</span></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; primes;</span><br><span class="line">    <span class="type">int</span> nsqrt=<span class="built_in">sqrt</span>(n);</span><br><span class="line">    <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">isprime</span><span class="params">(n+<span class="number">1</span>,<span class="literal">true</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=nsqrt;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j=i*i;j&lt;=n;j+=i)&#123;</span><br><span class="line">                isprime[j]=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//分块计数</span></span><br><span class="line">    <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">block</span><span class="params">(S)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">0</span>;k*S&lt;=n;++k)&#123;</span><br><span class="line">        block=<span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(S,<span class="literal">true</span>);</span><br><span class="line">        <span class="type">int</span> start=k*S;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="comment">//找不小于start的最小的p的倍数，先找是p的多少倍</span></span><br><span class="line">            <span class="type">int</span> start_idx=(start+p<span class="number">-1</span>)/p;</span><br><span class="line">            <span class="comment">//若start_idx小于p，则已经被筛选过</span></span><br><span class="line">            <span class="type">int</span> j=<span class="built_in">max</span>(start_idx,p)*p-start;</span><br><span class="line">            <span class="keyword">for</span>(;j&lt;S;j+=p)&#123;</span><br><span class="line">                block[j]=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//0和1不是质数</span></span><br><span class="line">        <span class="keyword">if</span>(k==<span class="number">0</span>)block[<span class="number">0</span>]=block[<span class="number">1</span>]=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;S&amp;&amp;start+i&lt;=n;++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(block[i])ret++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>欧拉筛法（线性筛）</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; primes;</span><br><span class="line">vector&lt;<span class="type">bool</span>&gt; isprime;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">euler</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    isprime=<span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(n,<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//考虑当前数对已加质数的乘积</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="number">1ll</span>*p*i&gt;n)<span class="keyword">break</span>;</span><br><span class="line">            isprime[p*i]=<span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%p==<span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">            <span class="comment">//由于primes里面质数是从小到大的，</span></span><br><span class="line">            <span class="comment">//所以i乘上其他的质数的结果一定会被</span></span><br><span class="line">            <span class="comment">//当前prime的元素的倍数筛掉，</span></span><br><span class="line">            <span class="comment">//就不需要在这里先筛一次，</span></span><br><span class="line">            <span class="comment">//所以这里直接 break掉就好了</span></span><br><span class="line">            <span class="comment">//此时p是i的最小的质因子</span></span><br><span class="line">            <span class="comment">//换句话说，(i*p)=i * p=更小的i * 更大的p，只要更新一遍就好了</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> primes.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>线性筛求解欧拉函数</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">5e6</span>;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">isprime</span><span class="params">(MAXN,<span class="number">1</span>)</span></span>;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; primes,<span class="built_in">phi</span>(MAXN,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pre</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=MAXN;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">            phi[i]=i<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i*p&gt;MAXN)<span class="keyword">break</span>;</span><br><span class="line">            isprime[i*p]=<span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%p)&#123;</span><br><span class="line">                <span class="comment">//p!|i,则(p,i)=1,则由积性函数可拆解</span></span><br><span class="line">                phi[i*p]=phi[i]*phi[p];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//p|i,则i包含i*p的所有质因子,拆解(i*p)=i * p,此时p是i最小的质因子</span></span><br><span class="line">                phi[i*p]=phi[i]*p;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">欧拉函数</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:14:53 / 修改时间：15:22:17" itemprop="dateCreated datePublished" datetime="2023-04-17T15:14:53+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="欧拉函数"><a href="#欧拉函数" class="headerlink" title="欧拉函数"></a>欧拉函数</h4><p>$\varphi(n)$表示小于等于n的与n互质的数的个数</p>
+<p>$\varphi(n)&#x3D;\sum_{k&lt;&#x3D;n}[gdc(k,n)&#x3D;1]$</p>
+<p>性质</p>
+<ol>
+<li><p>$\varphi(n)$是积性函数</p>
+</li>
+<li><p>$n&#x3D;\sum_{d|n}{\varphi(d)}$</p>
+</li>
+<li><p>若$n&#x3D;p^k$，$p$是质数，则$\varphi(n)&#x3D;p^k-p^{k-1}$</p>
+</li>
+</ol>
+<blockquote>
+<p>证明：</p>
+<p>有$n&#x2F;p&#x3D;p^{k-1}$个数和n不互质，故与其互质的有$n-p^{k-1}&#x3D;p^k-p^{k-1}$个</p>
+</blockquote>
+<ol start="4">
+<li>若$n&#x3D;\prod_{i&#x3D;1}^{s} p_{i}^{k_{i}}$，则$\varphi(n)&#x3D;n \prod_{i&#x3D;1}^{s}\left(1-\frac{1}{p_{i}}\right)$</li>
+</ol>
+<p>$$<br>\begin{aligned}<br>\varphi(n) &amp; &#x3D;\prod_{i&#x3D;1}^{s} \varphi\left(p_{i}^{k_{i}}\right) \<br>&amp; &#x3D;\prod_{i&#x3D;1}^{s}\left(p_{i}-1\right) \times {p_{i}^{k_{i-1}}} \<br>&amp; &#x3D;\prod_{i&#x3D;1}^{s} p_{i}^{k_{i}} \times\left(1-\frac{1}{p_{i}}\right) \<br>&amp; &#x3D;n \prod_{i&#x3D;1}^{s}\left(1-\frac{1}{p_{i}}\right)<br>\end{aligned}<br>$$</p>
+<p>欧拉函数的代码实现</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">euler_phi</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret=n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i*i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(n%i==<span class="number">0</span>)&#123;</span><br><span class="line">            ret=ret/i*(i<span class="number">-1</span>);</span><br><span class="line">            <span class="keyword">while</span>(n%i==<span class="number">0</span>)n/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(n&gt;<span class="number">1</span>)ret=ret/n*(n<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>欧拉定理</p>
+<p>若$(a,m)&#x3D;1$，则$a^{\varphi(m)}\equiv1(mod,m)$</p>
+<p>证明见欧拉定理证明。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E5%90%8C%E4%BD%99/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E5%90%8C%E4%BD%99/" class="post-title-link" itemprop="url">同余</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:14:43 / 修改时间：15:22:00" itemprop="dateCreated datePublished" datetime="2023-04-17T15:14:43+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="同余"><a href="#同余" class="headerlink" title="同余"></a>同余</h4><p>如果$m|(a-b)$，则称$a\equiv{b(mod,m)}$</p>
+<p>性质</p>
+<p>自反性：$a\equiv{a(mod,m)}$</p>
+<p>对称性：若$a\equiv{b(mod,m)}$，则$b\equiv{a(mod,m)}$</p>
+<p>传递性：若$a\equiv{b(mod,m)}$，$b\equiv{c(mod,m)}$，则$a\equiv{c(mod,m)}$</p>
+<p>线性运算：若$a\equiv{b(mod,m)}$，$c\equiv{d(mod,m)}$，则</p>
+<p>$a\pm{c}\equiv{b\pm{d}(mod,m)}$</p>
+<p>$a\times{c}\equiv{b\times{d}(mod,m)}$</p>
+<p>同乘性：若$a\equiv{b(mod,m)}$，则$ka\equiv{kb(mod,km)}$</p>
+<p>同除性：若$a\equiv{b(mod,m)}$且$d|m$，则$\frac{a}{d}\equiv{\frac{b}{d}(mod,\frac{m}{d})}$</p>
+<p>GCD:若$a\equiv{b(mod,m)}$，$(a,m)&#x3D;(b,m)$	推论：若$d|a$且$d|m$，则$d|b$（a,b交换同理）</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/%E8%B4%9D%E7%A5%96%E5%AE%9A%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/%E8%B4%9D%E7%A5%96%E5%AE%9A%E7%90%86/" class="post-title-link" itemprop="url">贝祖定理</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:14:27 / 修改时间：15:22:08" itemprop="dateCreated datePublished" datetime="2023-04-17T15:14:27+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="贝祖定理：-xa-yb-x3D-a-b"><a href="#贝祖定理：-xa-yb-x3D-a-b" class="headerlink" title="贝祖定理：$xa+yb&#x3D;(a,b)$"></a>贝祖定理：$xa+yb&#x3D;(a,b)$</h4><p>a,b的最大公约数能被表示成$a$和$b$的线性组合</p>
+<p>特别的，$(a,b)&#x3D;1$时，即$a$和$b$互素的时候，存在$x$,$y$使得$xa+yb&#x3D;1$</p>
+<p>详情见：<a target="_blank" rel="noopener" href="https://oi-wiki.org/math/number-theory/bezouts/">裴蜀定理 - OI Wiki (oi-wiki.org)</a></p>
+<p><strong>EXGCD问题</strong></p>
+<p>$xa+yb&#x3D;(a,b)$的解</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">LL <span class="title">exgcd</span><span class="params">(LL a,LL b,LL&amp; x,LL&amp; y)</span></span>&#123;</span><br><span class="line">    <span class="comment">//递归法</span></span><br><span class="line">    <span class="keyword">if</span>(b==<span class="number">0</span>)&#123;</span><br><span class="line">        x=<span class="number">1</span>;</span><br><span class="line">        y=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span> a;</span><br><span class="line">    &#125;</span><br><span class="line">    LL d=<span class="built_in">exgcd</span>(b,a%b,x,y);</span><br><span class="line">    LL t=x;</span><br><span class="line">    x=y;</span><br><span class="line">    y=t-(a/b)*y;</span><br><span class="line">    <span class="keyword">return</span> d;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LL _exgcd(LL a,LL b,LL&amp; x,LL&amp; y)&#123;</span><br><span class="line">    <span class="comment">//迭代法</span></span><br><span class="line">    x=<span class="number">1</span>,y=<span class="number">0</span>;</span><br><span class="line">    <span class="type">int</span> x1=<span class="number">0</span>,y1=<span class="number">1</span>,a1=a,b1=b;</span><br><span class="line">    <span class="keyword">while</span>(b1)&#123;</span><br><span class="line">        LL q=a1/b1;</span><br><span class="line">        <span class="built_in">tie</span>(x,x1)=<span class="built_in">make_tuple</span>(x1,x-q*x1);</span><br><span class="line">        <span class="built_in">tie</span>(y,y1)=<span class="built_in">make_tuple</span>(y1,y-q*y1);</span><br><span class="line">        <span class="built_in">tie</span>(a1,b1)=<span class="built_in">make_tuple</span>(b1,a1-q*b1);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">LL __exgcd(LL a,LL b,LL&amp; x,LL&amp; y)&#123;</span><br><span class="line">    <span class="comment">//矩阵法</span></span><br><span class="line">    <span class="type">int</span> x1=<span class="number">1</span>,x2=<span class="number">0</span>,x3=<span class="number">0</span>,x4=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        LL c=a/b;</span><br><span class="line">        <span class="built_in">tie</span>(x1,x2,x3,x4,a,b)=<span class="built_in">make_tuple</span>(x3,x4,x1-c*x3,x2-c*x4,b,a-c*b);</span><br><span class="line">    &#125;</span><br><span class="line">    x=x1,y=x2;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/17/GCD/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/17/GCD/" class="post-title-link" itemprop="url">GCD</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-04-17 15:14:07 / 修改时间：15:19:20" itemprop="dateCreated datePublished" datetime="2023-04-17T15:14:07+08:00">2023-04-17</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h4 id="a-b-x3D-b-a-mod-b"><a href="#a-b-x3D-b-a-mod-b" class="headerlink" title="$(a,b)&#x3D;(b,a,mod,b)$"></a>$(a,b)&#x3D;(b,a,mod,b)$</h4><p>代码实现</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//递归</span></span><br><span class="line"><span class="function">LL <span class="title">gcd1</span><span class="params">(LL a,LL b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(b==<span class="number">0</span>)<span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">gcd1</span>(b,a%b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//迭代</span></span><br><span class="line"><span class="function">LL <span class="title">gcd2</span><span class="params">(LL a,LL b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(b)&#123;</span><br><span class="line">        LL tmp=a;</span><br><span class="line">        a=b;</span><br><span class="line">        b=tmp%b;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//stein算法</span></span><br><span class="line"><span class="function">LL <span class="title">gcd3</span><span class="params">(LL a,LL b)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(a==b)<span class="keyword">return</span> a;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span>(a%<span class="number">2</span>==<span class="number">0</span>&amp;&amp;b%<span class="number">2</span>==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">2</span>*<span class="built_in">gcd3</span>(a/<span class="number">2</span>,b/<span class="number">2</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a%<span class="number">2</span>==<span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">gcd3</span>(a/<span class="number">2</span>,b);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(a&lt;b)<span class="built_in">swap</span>(a,b);</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">gcd3</span>(a-b,b);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//多个数的gcd</span></span><br><span class="line"><span class="function">LL <span class="title">getgcd</span><span class="params">(queue&lt;LL&gt; q)</span></span>&#123;</span><br><span class="line">    <span class="keyword">while</span>(q.<span class="built_in">size</span>()!=<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="type">int</span> x=q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="type">int</span> y=q.<span class="built_in">front</span>();</span><br><span class="line">        q.<span class="built_in">pop</span>();</span><br><span class="line">        q.<span class="built_in">push</span>(<span class="built_in">gcd1</span>(x,y));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> q.<span class="built_in">front</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://example.com/2023/04/16/%E4%BB%8B%E7%BB%8D/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -307,20 +917,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">1</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">10</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
