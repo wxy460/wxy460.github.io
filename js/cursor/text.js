@@ -1,10 +1,10 @@
 var a_idx = 0;
 jQuery(document).ready(function($) {
   $("body").click(function(e) {
-    var a = new Array("Ciallo", "Nanami");
+    var a = new Array("喜欢我", "不喜欢我");
     var $i = $("<span/>").text(a[a_idx]);
     var x = e.pageX,
-      y = e.pageY;
+    y = e.pageY;
     $i.css({
       "z-index": 99999,
       "top": y - 28,
