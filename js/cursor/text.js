@@ -1,7 +1,7 @@
 var a_idx = 0;
 jQuery(document).ready(function($) {
   $("body").click(function(e) {
-    var a = new Array("Ciallo~(∠・ω< )⌒★");
+    var a = new Array("Ciallo", "Nanami");
     var $i = $("<span/>").text(a[a_idx]);
     var x = e.pageX,
       y = e.pageY;
