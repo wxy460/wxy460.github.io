@@ -174,6 +174,159 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/05/23/LCA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/23/LCA/" class="post-title-link" itemprop="url">LCA</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-23 20:09:31 / 修改时间：20:16:18" itemprop="dateCreated datePublished" datetime="2023-05-23T20:09:31+08:00">2023-05-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GT/" itemprop="url" rel="index"><span itemprop="name">GT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>LCA是经典的树上问题，求解两个点的最近公共祖先，我们通常会用倍增去处理。</p>
+<p>代码如下</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">1e5</span>+<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">vector&lt;<span class="type">int</span>&gt; v[MAXN];</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; w[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> fa[MAXN][<span class="number">31</span>],cost[MAXN][<span class="number">31</span>],dep[MAXN],n,m;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">dfs</span><span class="params">(<span class="type">int</span> root,<span class="type">int</span> fno)</span></span>&#123;</span><br><span class="line">    fa[root][<span class="number">0</span>]=fno;</span><br><span class="line">    dep[root]=dep[fa[root][<span class="number">0</span>]]+<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;<span class="number">31</span>;i++)&#123;</span><br><span class="line">        fa[root][i]=fa[fa[root][i<span class="number">-1</span>]][i<span class="number">-1</span>];</span><br><span class="line">        cost[root][i]=cost[root][i<span class="number">-1</span>]+cost[fa[root][i<span class="number">-1</span>]][i<span class="number">-1</span>];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;v[root].<span class="built_in">size</span>();i++)&#123;</span><br><span class="line">        <span class="keyword">if</span>(v[root][i]==fno)<span class="keyword">continue</span>;</span><br><span class="line">        cost[v[root][i]][<span class="number">0</span>]=w[root][i];</span><br><span class="line">        <span class="built_in">dfs</span>(v[root][i],root);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">lca</span><span class="params">(<span class="type">int</span> x,<span class="type">int</span> y)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ans=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">if</span>(dep[x]&gt;dep[y])<span class="built_in">swap</span>(x,y);</span><br><span class="line">    <span class="type">int</span> tmp=dep[y]-dep[x];</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;tmp;i++,tmp&gt;&gt;=<span class="number">1</span>)&#123;</span><br><span class="line">    	<span class="comment">// 这里是按位处理深度差，也可以直接注释代码来</span></span><br><span class="line">        <span class="keyword">if</span>(tmp&amp;<span class="number">1</span>)ans+=cost[y][i],y=fa[y][i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// for(int i=30;i&gt;=0;--i)&#123;</span></span><br><span class="line">	<span class="comment">// 	 if(dep(fa[y][i])&gt;=dep[x])ans+=cost[y][i],y=fa[y][i];</span></span><br><span class="line">	<span class="comment">// &#125;</span></span><br><span class="line">    <span class="keyword">if</span>(x==y)<span class="keyword">return</span> ans;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">30</span>;i&gt;=<span class="number">0</span>&amp;&amp;y!=x;i--)&#123;</span><br><span class="line">        <span class="keyword">if</span>(fa[x][i]!=fa[y][i])&#123;</span><br><span class="line">            ans+=cost[x][i]+cost[y][i];</span><br><span class="line">            x=fa[x][i];</span><br><span class="line">            y=fa[y][i];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    ans+=cost[x][<span class="number">0</span>]+cost[y][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">return</span> ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="built_in">memset</span>(fa, <span class="number">0</span>, <span class="built_in">sizeof</span>(fa));</span><br><span class="line">    <span class="built_in">memset</span>(cost, <span class="number">0</span>, <span class="built_in">sizeof</span>(cost));</span><br><span class="line">    <span class="built_in">memset</span>(dep, <span class="number">0</span>, <span class="built_in">sizeof</span>(dep));</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;n<span class="number">-1</span>;i++)&#123;</span><br><span class="line">        <span class="type">int</span> a,b,c;</span><br><span class="line">        cin&gt;&gt;a&gt;&gt;b&gt;&gt;c;</span><br><span class="line">        v[a].<span class="built_in">push_back</span>(b);</span><br><span class="line">        v[b].<span class="built_in">push_back</span>(a);</span><br><span class="line">        w[a].<span class="built_in">push_back</span>(c);</span><br><span class="line">        w[b].<span class="built_in">push_back</span>(c);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">dfs</span>(<span class="number">1</span>,<span class="number">0</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;m;i++)&#123;</span><br><span class="line">        <span class="type">int</span> a,b;</span><br><span class="line">        cin&gt;&gt;a&gt;&gt;b;</span><br><span class="line">        cout&lt;&lt;<span class="built_in">lca</span>(a,b)&lt;&lt;endl;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>LCA的处理常常运用于例如严格次小生成树的问题中。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/04/20/SPLAY/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/04/20/SPLAY/" class="post-title-link" itemprop="url">SPLAY</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-04-20 21:39:20" itemprop="dateCreated datePublished" datetime="2023-04-20T21:39:20+08:00">2023-04-20</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2023-04-23 11:35:28" itemprop="dateModified" datetime="2023-04-23T11:35:28+08:00">2023-04-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/" itemprop="url" rel="index"><span itemprop="name">数据结构</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>SPLAY是一种平衡树，特点是每次操作都将操作节点旋转到根节点。</p>
+<p>维护的信息有大小<code>sz</code>,次数<code>cnt</code>,值<code>val</code>,父亲节点<code>fa[MAXN]</code>,儿子节点<code>ch[MAXN][2]</code></p>
+<p>全局变量有：根节点<code>rt</code>,节点编码总数<code>tot</code></p>
+<p>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">1e5</span>+<span class="number">2</span>;</span><br><span class="line"></span><br><span class="line"><span class="type">int</span> rt,tot,fa[MAXN],ch[MAXN][<span class="number">2</span>],val[MAXN],cnt[MAXN],sz[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="comment">//更新信息</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">maintain</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;sz[x]=sz[ch[x][<span class="number">0</span>]]+sz[ch[x][<span class="number">1</span>]]+cnt[x];&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//确定是左节点还是右节点</span></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">get</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;<span class="keyword">return</span> x==ch[fa[x]][<span class="number">1</span>];&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//清空信息</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">clear</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;fa[x]=ch[x][<span class="number">0</span>]=ch[x][<span class="number">1</span>]=val[x]=cnt[x]=sz[x]=<span class="number">0</span>;&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//旋转节点</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">rotate</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line"> <span class="comment">/*四种情况的一种   </span></span><br><span class="line"><span class="comment">        z               z</span></span><br><span class="line"><span class="comment">       /               /</span></span><br><span class="line"><span class="comment">      y		---&gt;      x</span></span><br><span class="line"><span class="comment">     /               / \</span></span><br><span class="line"><span class="comment">    x               a   y</span></span><br><span class="line"><span class="comment">   / \                   \</span></span><br><span class="line"><span class="comment">  a   b                   b </span></span><br><span class="line"><span class="comment">*/</span>    </span><br><span class="line">    <span class="type">int</span> y=fa[x],z=fa[y],chk=<span class="built_in">get</span>(x);</span><br><span class="line">    </span><br><span class="line">    ch[y][chk]=ch[x][chk^<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">if</span>(ch[x][chk^<span class="number">1</span>])fa[ch[x][chk^<span class="number">1</span>]]=y;</span><br><span class="line">    </span><br><span class="line">    ch[x][chk^<span class="number">1</span>]=y;</span><br><span class="line">    fa[y]=x;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(z)ch[z][y==ch[z][<span class="number">1</span>]]=x;</span><br><span class="line">    fa[x]=z;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">maintain</span>(y);</span><br><span class="line">    <span class="built_in">maintain</span>(x);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//旋转x到根节点</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">splay</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="comment">//若fa[f]没有，直接rotate(x)</span></span><br><span class="line">    <span class="comment">//若有，根据x,f,fa[f]的位置，有四种情况，用一种代码便可以解决，一种位置关系如下</span></span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment">      fa[f]           x</span></span><br><span class="line"><span class="comment">      /                \</span></span><br><span class="line"><span class="comment">     f		---&gt;        f</span></span><br><span class="line"><span class="comment">    /                    \</span></span><br><span class="line"><span class="comment">   x                     fa[f]</span></span><br><span class="line"><span class="comment">*/</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> f=fa[x];f=fa[x],f;<span class="built_in">rotate</span>(x))&#123;</span><br><span class="line">        <span class="keyword">if</span>(fa[f])<span class="built_in">rotate</span>(<span class="built_in">get</span>(x)==<span class="built_in">get</span>(f)?f:x);</span><br><span class="line">    &#125;</span><br><span class="line">    rt=x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">ins</span><span class="params">(<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(!rt)&#123;</span><br><span class="line">        <span class="comment">//若根节点为空，直接建立</span></span><br><span class="line">        val[++tot]=k;</span><br><span class="line">        cnt[tot]++;</span><br><span class="line">        rt=tot;</span><br><span class="line">        <span class="built_in">maintain</span>(rt);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> cur=rt,f=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(val[cur]==k)&#123;</span><br><span class="line">            <span class="comment">//若值相等，直接cnt++</span></span><br><span class="line">            cnt[cur]++;</span><br><span class="line">            <span class="built_in">maintain</span>(cur);</span><br><span class="line">            <span class="built_in">maintain</span>(f);</span><br><span class="line">            <span class="built_in">splay</span>(cur);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//搜索儿子</span></span><br><span class="line">        f=cur;</span><br><span class="line">        cur=ch[cur][val[cur]&lt;k];</span><br><span class="line">        <span class="keyword">if</span>(!cur)&#123;</span><br><span class="line">            <span class="comment">//若找到最后是空，则建立节点</span></span><br><span class="line">            val[++tot]=k;</span><br><span class="line">            cnt[tot]++;</span><br><span class="line">            fa[tot]=f;</span><br><span class="line">            ch[f][val[f]&lt;k]=tot;</span><br><span class="line">            <span class="built_in">maintain</span>(tot);</span><br><span class="line">            <span class="built_in">maintain</span>(f);</span><br><span class="line">            <span class="built_in">splay</span>(tot);</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">rk</span><span class="params">(<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> res=<span class="number">0</span>,cur=rt;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(val[cur]&gt;k)&#123;</span><br><span class="line">            <span class="comment">//搜索左儿子</span></span><br><span class="line">            cur=ch[cur][<span class="number">0</span>];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            res+=sz[ch[cur][<span class="number">0</span>]];</span><br><span class="line">            <span class="keyword">if</span>(val[cur]==k)&#123;</span><br><span class="line">                <span class="comment">//找到返回</span></span><br><span class="line">                <span class="built_in">splay</span>(cur);</span><br><span class="line">                <span class="keyword">return</span> res+<span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            res+=cnt[cur];</span><br><span class="line">            <span class="comment">//搜索右儿子</span></span><br><span class="line">            cur=ch[cur][<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">kth</span><span class="params">(<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> cur=rt;</span><br><span class="line">    <span class="keyword">while</span>(<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(ch[cur][<span class="number">0</span>]&amp;&amp;k&lt;=sz[ch[cur][<span class="number">0</span>]])&#123;</span><br><span class="line">            <span class="comment">//搜索左儿子</span></span><br><span class="line">            cur=ch[cur][<span class="number">0</span>];</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            k-=sz[ch[cur][<span class="number">0</span>]]+cnt[cur];</span><br><span class="line">            <span class="keyword">if</span>(k&lt;=<span class="number">0</span>)&#123;</span><br><span class="line">                <span class="comment">//找到了</span></span><br><span class="line">                <span class="built_in">splay</span>(cur);</span><br><span class="line">                <span class="keyword">return</span> val[cur];</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//搜索右儿子</span></span><br><span class="line">            cur=ch[cur][<span class="number">1</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">pre</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> cur=ch[rt][<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">if</span>(!cur)<span class="keyword">return</span> cur;<span class="comment">//前置为空</span></span><br><span class="line">    <span class="keyword">while</span>(ch[cur][<span class="number">1</span>])cur=ch[cur][<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">splay</span>(cur);</span><br><span class="line">    <span class="keyword">return</span> cur;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">nxt</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> cur=ch[rt][<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">if</span>(!cur)<span class="keyword">return</span> cur;<span class="comment">//后继为空</span></span><br><span class="line">    <span class="keyword">while</span>(ch[cur][<span class="number">0</span>])cur=ch[cur][<span class="number">0</span>];</span><br><span class="line">    <span class="built_in">splay</span>(cur);</span><br><span class="line">    <span class="keyword">return</span> cur;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">del</span><span class="params">(<span class="type">int</span> k)</span></span>&#123;</span><br><span class="line">    <span class="comment">//先将值为k的节点找到并splay操作</span></span><br><span class="line">    <span class="built_in">rk</span>(k);</span><br><span class="line">    <span class="keyword">if</span>(cnt[rt]&gt;<span class="number">1</span>)&#123;</span><br><span class="line">        <span class="comment">//若cnt&gt;1，直接--</span></span><br><span class="line">        cnt[rt]--;</span><br><span class="line">        <span class="built_in">maintain</span>(rt);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!ch[rt][<span class="number">0</span>]&amp;&amp;!ch[rt][<span class="number">1</span>])&#123;</span><br><span class="line">        <span class="comment">//左右儿子都没有，直接清空</span></span><br><span class="line">        <span class="built_in">clear</span>(rt);</span><br><span class="line">        rt=<span class="number">0</span>;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!ch[rt][<span class="number">0</span>])&#123;</span><br><span class="line">        <span class="comment">//如果没有左儿子，直接删除，右儿子作为根节点</span></span><br><span class="line">        <span class="type">int</span> cur=rt;</span><br><span class="line">        rt=ch[rt][<span class="number">1</span>];</span><br><span class="line">        fa[rt]=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">clear</span>(cur);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(!ch[rt][<span class="number">1</span>])&#123;</span><br><span class="line">        <span class="comment">//如果没有右儿子，直接删除，左儿子作为根节点</span></span><br><span class="line">        <span class="type">int</span> cur=rt;</span><br><span class="line">        rt=ch[rt][<span class="number">0</span>];</span><br><span class="line">        fa[rt]=<span class="number">0</span>;</span><br><span class="line">        <span class="built_in">clear</span>(cur);</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//两个儿子都在的话，</span></span><br><span class="line">    <span class="comment">//将原根节点的前置的右儿子设置为原根节点的右儿子</span></span><br><span class="line">    <span class="type">int</span> cur=rt,x=<span class="built_in">pre</span>();<span class="comment">//求前置的时候已经splay操作了，rt=x</span></span><br><span class="line">    fa[ch[cur][<span class="number">1</span>]]=x;</span><br><span class="line">    ch[x][<span class="number">1</span>]=ch[cur][<span class="number">1</span>];</span><br><span class="line">    <span class="built_in">clear</span>(cur);</span><br><span class="line">    <span class="built_in">maintain</span>(rt);<span class="comment">//只需再更新rt的信息</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="comment">//test</span></span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">1</span>);</span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">2</span>);</span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">3</span>);</span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">114</span>);</span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">514</span>);</span><br><span class="line">    <span class="built_in">ins</span>(<span class="number">1919</span>);</span><br><span class="line">    cout&lt;&lt;<span class="built_in">rk</span>(<span class="number">114</span>)&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="built_in">kth</span>(<span class="number">3</span>)&lt;&lt;endl;</span><br><span class="line">    <span class="built_in">del</span>(<span class="number">114</span>);</span><br><span class="line">    <span class="built_in">del</span>(<span class="number">3</span>);</span><br><span class="line">    cout&lt;&lt;<span class="built_in">rk</span>(<span class="number">2</span>)&lt;&lt;endl;</span><br><span class="line">    cout&lt;&lt;<span class="built_in">kth</span>(<span class="number">3</span>)&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>总结：SPLAY支持了基本操作，例如查询rank和kth_element，是一种较简单的平衡树</p>
+<p>动画：<a
+target="_blank" rel="noopener" href="https://www.cs.usfca.edu/~galles/visualization/SplayTree.html">SPLAY
+Tree</a></p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/04/20/BST/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -932,197 +1085,6 @@ a^{(b \bmod \varphi(m))+\varphi(m)}, &amp; \operatorname{gcd}(a, m) \neq
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/04/17/%E7%AD%9B%E6%B3%95/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Si_Yue">
-      <meta itemprop="description" content="奋斗100天我要当暗影大人">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Si_Yue小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/04/17/%E7%AD%9B%E6%B3%95/" class="post-title-link" itemprop="url">筛法</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-17 15:15:03 / 修改时间：15:33:11" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:03+08:00">2023-04-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="筛法">筛法</h4>
-<ol type="1">
-<li>埃氏筛法</li>
-</ol>
-<p>筛掉质数的倍数</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="type">long</span> <span class="type">long</span> LL;</span><br><span class="line"></span><br><span class="line">vector&lt;LL&gt; is_prime,prime;</span><br><span class="line"></span><br><span class="line"><span class="function">LL <span class="title">sieve</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    is_prime=<span class="built_in">vector</span>&lt;LL&gt;(n+<span class="number">1</span>,<span class="number">1</span>);</span><br><span class="line">    is_prime[<span class="number">0</span>]=is_prime[<span class="number">1</span>]=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(LL i=<span class="number">2</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(is_prime[i])&#123;</span><br><span class="line">            prime.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="keyword">for</span>(LL j=i*i;j&lt;=n;j+=i)&#123;</span><br><span class="line">                is_prime[j]=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> prime.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>分块优化空间复杂度</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">count_primes</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">const</span> <span class="type">int</span> S=<span class="number">1e4</span>;</span><br><span class="line">    <span class="type">int</span> ret=<span class="number">0</span>;</span><br><span class="line">    <span class="comment">//筛sqrt(n)中的质数并记录</span></span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; primes;</span><br><span class="line">    <span class="type">int</span> nsqrt=<span class="built_in">sqrt</span>(n);</span><br><span class="line">    <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">isprime</span><span class="params">(n+<span class="number">1</span>,<span class="literal">true</span>)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=nsqrt;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">            <span class="keyword">for</span>(<span class="type">int</span> j=i*i;j&lt;=n;j+=i)&#123;</span><br><span class="line">                isprime[j]=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//分块计数</span></span><br><span class="line">    <span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">block</span><span class="params">(S)</span></span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> k=<span class="number">0</span>;k*S&lt;=n;++k)&#123;</span><br><span class="line">        block=<span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(S,<span class="literal">true</span>);</span><br><span class="line">        <span class="type">int</span> start=k*S;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="comment">//找不小于start的最小的p的倍数，先找是p的多少倍</span></span><br><span class="line">            <span class="type">int</span> start_idx=(start+p<span class="number">-1</span>)/p;</span><br><span class="line">            <span class="comment">//若start_idx小于p，则已经被筛选过</span></span><br><span class="line">            <span class="type">int</span> j=<span class="built_in">max</span>(start_idx,p)*p-start;</span><br><span class="line">            <span class="keyword">for</span>(;j&lt;S;j+=p)&#123;</span><br><span class="line">                block[j]=<span class="literal">false</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//0和1不是质数</span></span><br><span class="line">        <span class="keyword">if</span>(k==<span class="number">0</span>)block[<span class="number">0</span>]=block[<span class="number">1</span>]=<span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">0</span>;i&lt;S&amp;&amp;start+i&lt;=n;++i)&#123;</span><br><span class="line">            <span class="keyword">if</span>(block[i])ret++;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="2" type="1">
-<li>欧拉筛法（线性筛）</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;<span class="type">int</span>&gt; primes;</span><br><span class="line">vector&lt;<span class="type">bool</span>&gt; isprime;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">euler</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    isprime=<span class="built_in">vector</span>&lt;<span class="type">bool</span>&gt;(n,<span class="literal">true</span>);</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//考虑当前数对已加质数的乘积</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="keyword">if</span>(<span class="number">1ll</span>*p*i&gt;n)<span class="keyword">break</span>;</span><br><span class="line">            isprime[p*i]=<span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%p==<span class="number">0</span>)<span class="keyword">break</span>;</span><br><span class="line">            <span class="comment">//由于primes里面质数是从小到大的，</span></span><br><span class="line">            <span class="comment">//所以i乘上其他的质数的结果一定会被</span></span><br><span class="line">            <span class="comment">//当前prime的元素的倍数筛掉，</span></span><br><span class="line">            <span class="comment">//就不需要在这里先筛一次，</span></span><br><span class="line">            <span class="comment">//所以这里直接 break掉就好了</span></span><br><span class="line">            <span class="comment">//此时p是i的最小的质因子</span></span><br><span class="line">            <span class="comment">//换句话说，(i*p)=i * p=更小的i * 更大的p，只要更新一遍就好了</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> primes.<span class="built_in">size</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<ol start="3" type="1">
-<li>线性筛求解欧拉函数</li>
-</ol>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">5e6</span>;</span><br><span class="line"></span><br><span class="line"><span class="function">vector&lt;<span class="type">bool</span>&gt; <span class="title">isprime</span><span class="params">(MAXN,<span class="number">1</span>)</span></span>;</span><br><span class="line">vector&lt;<span class="type">int</span>&gt; primes,<span class="built_in">phi</span>(MAXN,<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">pre</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=MAXN;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(isprime[i])&#123;</span><br><span class="line">            primes.<span class="built_in">push_back</span>(i);</span><br><span class="line">            phi[i]=i<span class="number">-1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span>(<span class="type">int</span> p:primes)&#123;</span><br><span class="line">            <span class="keyword">if</span>(i*p&gt;MAXN)<span class="keyword">break</span>;</span><br><span class="line">            isprime[i*p]=<span class="literal">false</span>;</span><br><span class="line">            <span class="keyword">if</span>(i%p)&#123;</span><br><span class="line">                <span class="comment">//p!|i,则(p,i)=1,则由积性函数可拆解</span></span><br><span class="line">                phi[i*p]=phi[i]*phi[p];</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="comment">//p|i,则i包含i*p的所有质因子,拆解(i*p)=i * p,此时p是i最小的质因子</span></span><br><span class="line">                phi[i*p]=phi[i]*p;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/04/17/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Si_Yue">
-      <meta itemprop="description" content="奋斗100天我要当暗影大人">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Si_Yue小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/04/17/%E6%AC%A7%E6%8B%89%E5%87%BD%E6%95%B0/" class="post-title-link" itemprop="url">欧拉函数</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-17 15:14:53 / 修改时间：15:33:06" itemprop="dateCreated datePublished" datetime="2023-04-17T15:14:53+08:00">2023-04-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="欧拉函数">欧拉函数</h4>
-<p><span
-class="math inline">\(\varphi(n)\)</span>表示小于等于n的与n互质的数的个数</p>
-<p><span
-class="math inline">\(\varphi(n)=\sum_{k&lt;=n}[gdc(k,n)=1]\)</span></p>
-<p>性质</p>
-<ol type="1">
-<li><p><span
-class="math inline">\(\varphi(n)\)</span>是积性函数</p></li>
-<li><p><span
-class="math inline">\(n=\sum_{d|n}{\varphi(d)}\)</span></p></li>
-<li><p>若<span class="math inline">\(n=p^k\)</span>，<span
-class="math inline">\(p\)</span>是质数，则<span
-class="math inline">\(\varphi(n)=p^k-p^{k-1}\)</span></p></li>
-</ol>
-<blockquote>
-<p>证明：</p>
-<p>有<span
-class="math inline">\(n/p=p^{k-1}\)</span>个数和n不互质，故与其互质的有<span
-class="math inline">\(n-p^{k-1}=p^k-p^{k-1}\)</span>个</p>
-</blockquote>
-<ol start="4" type="1">
-<li>若<span class="math inline">\(n=\prod_{i=1}^{s}
-p_{i}^{k_{i}}\)</span>，则<span class="math inline">\(\varphi(n)=n
-\prod_{i=1}^{s}\left(1-\frac{1}{p_{i}}\right)\)</span></li>
-</ol>
-<p><span class="math display">\[
-\begin{aligned}
-\varphi(n) &amp; =\prod_{i=1}^{s} \varphi\left(p_{i}^{k_{i}}\right) \\
-&amp; =\prod_{i=1}^{s}\left(p_{i}-1\right) \times {p_{i}^{k_{i-1}}} \\
-&amp; =\prod_{i=1}^{s} p_{i}^{k_{i}}
-\times\left(1-\frac{1}{p_{i}}\right) \\
-&amp; =n \prod_{i=1}^{s}\left(1-\frac{1}{p_{i}}\right)
-\end{aligned}
-\]</span></p>
-<p>欧拉函数的代码实现</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">int</span> <span class="title">euler_phi</span><span class="params">(<span class="type">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret=n;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i*i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(n%i==<span class="number">0</span>)&#123;</span><br><span class="line">            ret=ret/i*(i<span class="number">-1</span>);</span><br><span class="line">            <span class="keyword">while</span>(n%i==<span class="number">0</span>)n/=i;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(n&gt;<span class="number">1</span>)ret=ret/n*(n<span class="number">-1</span>);</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>欧拉定理</p>
-<p>若<span class="math inline">\((a,m)=1\)</span>，则<span
-class="math inline">\(a^{\varphi(m)}\equiv1(mod\,m)\)</span></p>
-<p>证明见欧拉定理证明。</p>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1194,20 +1156,20 @@ class="math inline">\(a^{\varphi(m)}\equiv1(mod\,m)\)</span></p>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">24</span>
+          <span class="site-state-item-count">26</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">5</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">23</span>
+        <span class="site-state-item-count">25</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
