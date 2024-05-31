@@ -174,6 +174,88 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/05/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="Si_Yue">
+      <meta itemprop="description" content="奋斗100天我要当暗影大人">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Si_Yue小屋">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2023/05/31/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91/" class="post-title-link" itemprop="url">最小生成树</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-05-31 17:38:38 / 修改时间：17:52:56" itemprop="dateCreated datePublished" datetime="2023-05-31T17:38:38+08:00">2023-05-31</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GT/" itemprop="url" rel="index"><span itemprop="name">GT</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="kruskal算法">Kruskal算法</h2>
+<p>将图中的每条边按照权值从小到大排序，然后再贪心地用并查集去联合。具体的就是看每条边的两个点的并查集祖先是否是同一个，不是就联合。当我们找到了<span
+class="math inline">\(n-1\)</span>条边的时候就可以跳出循环了。</p>
+<p>代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">5e3</span>+<span class="number">22</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">edge</span>&#123;</span><br><span class="line">    <span class="type">int</span> u,v,w;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>&lt;(edge other)<span class="type">const</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> w&lt;other.w;</span><br><span class="line">    &#125; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vector&lt;edge&gt; e;</span><br><span class="line"><span class="type">int</span> n,m,fa[MAXN],ans;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">find</span><span class="params">(<span class="type">int</span> x)</span></span>&#123;</span><br><span class="line">    <span class="keyword">return</span> fa[x]==x?x:fa[x]=<span class="built_in">find</span>(fa[x]);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">unite</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> f_u=<span class="built_in">find</span>(u),f_v=<span class="built_in">find</span>(v);</span><br><span class="line">    fa[f_u]=f_v;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">kruskal</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        fa[i]=i;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">auto</span> ed:e)&#123;</span><br><span class="line">        <span class="type">int</span> u=ed.u,v=ed.v,w=ed.w;</span><br><span class="line">        <span class="keyword">if</span>(<span class="built_in">find</span>(u)!=<span class="built_in">find</span>(v))&#123;</span><br><span class="line">            <span class="built_in">unite</span>(u,v);</span><br><span class="line">            ans+=w;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> uf=<span class="built_in">find</span>(<span class="number">1</span>),flag=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">2</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(uf!=<span class="built_in">find</span>(i))&#123;</span><br><span class="line">            flag=<span class="number">0</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(flag)cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span> cout&lt;&lt;<span class="string">&quot;orz&quot;</span>&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;++i)&#123;</span><br><span class="line">        <span class="type">int</span> u,v,w;cin&gt;&gt;u&gt;&gt;v&gt;&gt;w;</span><br><span class="line">        e.<span class="built_in">push_back</span>(&#123;u,v,w&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">sort</span>(e.<span class="built_in">begin</span>(),e.<span class="built_in">end</span>(),<span class="built_in">less</span>&lt;edge&gt;());</span><br><span class="line">    <span class="built_in">kruskal</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="prim算法">Prim算法</h2>
+<p>dijkstra算法的变种，蒟蒻没咋用过</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;bits/stdc++.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="type">const</span> <span class="type">int</span> MAXN=<span class="number">5e3</span>+<span class="number">22</span>;</span><br><span class="line"><span class="type">const</span> <span class="type">int</span> INF=<span class="number">0x3f3f3f3f</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">node</span>&#123;</span><br><span class="line">    <span class="type">int</span> u,dis;</span><br><span class="line">    <span class="built_in">node</span>(<span class="type">int</span> _u,<span class="type">int</span> _dis):<span class="built_in">u</span>(_u),<span class="built_in">dis</span>(_dis)&#123;&#125;</span><br><span class="line">    <span class="type">bool</span> <span class="keyword">operator</span>&gt;(<span class="type">const</span> node&amp; other)<span class="type">const</span>&#123;<span class="keyword">return</span> dis&gt;other.dis;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">edge</span>&#123;</span><br><span class="line">    <span class="type">int</span> v,w;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vector&lt;edge&gt; p[MAXN];</span><br><span class="line">priority_queue&lt;node,vector&lt;node&gt;,greater&lt;node&gt;&gt; pq;</span><br><span class="line"><span class="type">int</span> n,m,dis[MAXN],vis[MAXN];</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">inline</span> <span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> u,<span class="type">int</span> v,<span class="type">int</span> w)</span></span>&#123;</span><br><span class="line">    p[u].<span class="built_in">push_back</span>(&#123;v,w&#125;);</span><br><span class="line">    p[v].<span class="built_in">push_back</span>(&#123;u,w&#125;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">prim</span><span class="params">(<span class="type">int</span> s)</span></span>&#123;</span><br><span class="line">    <span class="type">int</span> ret=<span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;++i)dis[i]=INF;</span><br><span class="line">    dis[s]=<span class="number">0</span>;</span><br><span class="line">    pq.<span class="built_in">push</span>(&#123;s,<span class="number">0</span>&#125;);</span><br><span class="line">    <span class="keyword">while</span>(!pq.<span class="built_in">empty</span>())&#123;</span><br><span class="line">        <span class="type">int</span> u=pq.<span class="built_in">top</span>().u,dist=pq.<span class="built_in">top</span>().dis;</span><br><span class="line">        pq.<span class="built_in">pop</span>();</span><br><span class="line">        <span class="keyword">if</span>(vis[u])<span class="keyword">continue</span>;</span><br><span class="line">        vis[u]=<span class="number">1</span>;</span><br><span class="line">        ret+=dist;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> edge:p[u])&#123;</span><br><span class="line">            <span class="type">int</span> v=edge.v,w=edge.w;</span><br><span class="line">            <span class="keyword">if</span>(w&lt;dis[v])&#123;</span><br><span class="line">                dis[v]=w;</span><br><span class="line">                pq.<span class="built_in">push</span>(&#123;v,dis[v]&#125;);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> ret;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=m;++i)&#123;</span><br><span class="line">        <span class="type">int</span> u,v,w;cin&gt;&gt;u&gt;&gt;v&gt;&gt;w;</span><br><span class="line">        <span class="built_in">add</span>(u,v,w);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="type">int</span> ans=<span class="built_in">prim</span>(<span class="number">1</span>),flag=<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="type">int</span> i=<span class="number">1</span>;i&lt;=n;++i)&#123;</span><br><span class="line">        <span class="keyword">if</span>(!vis[i])flag=<span class="number">0</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span>(flag)</span><br><span class="line">    cout&lt;&lt;ans&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    cout&lt;&lt;<span class="string">&quot;orz&quot;</span>&lt;&lt;endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="次小生成树">次小生成树</h2>
+<p>次小生成树分为严格的和不严格的，这里给出严格的代码，不严格的就只有一小点判断的改动。</p>
+<p>方法是先找出最小生成树，建立最小生成树。然后倍增维护最小生成树的祖先，路径上的最大权值，次大权值。</p>
+<p>最后在看所有的非最小生成树的边的两点在最小生成树中的路径上的最大值是多少，并且与未使用的该边替换，更新答案。如果最大值等于未使用的该边的权值，那么直接找次大值替换。</p>
+<p>最后的答案等于所有替换方案的最小值。</p>
+<p>代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;bits/stdc++.h&gt;</span><br><span class="line">#define int long long</span><br><span class="line">using namespace std;</span><br><span class="line">const int MAXN=1e5+2;</span><br><span class="line">const int MAXM=3e5+2;</span><br><span class="line">const int INF=0x7fffffffffffffff;</span><br><span class="line"></span><br><span class="line">struct Tr&#123;</span><br><span class="line">private:</span><br><span class="line">    struct edge&#123;</span><br><span class="line">        int v,w;</span><br><span class="line">    &#125;;</span><br><span class="line">    vector&lt;edge&gt; p[MAXN];</span><br><span class="line">    int fa[MAXN][31],dep[MAXN],m[MAXN][31],mm[MAXN][31];</span><br><span class="line"></span><br><span class="line">public:</span><br><span class="line">    void add(int u,int v,int w)&#123;</span><br><span class="line">        p[u].push_back(&#123;v,w&#125;);</span><br><span class="line">        p[v].push_back(&#123;u,w&#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void dfs(int x,int fno)&#123;</span><br><span class="line">        if(fno)dep[x]=dep[fno]+1,fa[x][0]=fno,mm[x][0]=-INF;</span><br><span class="line"></span><br><span class="line">        for(int i=1;i&lt;=30;++i)&#123;</span><br><span class="line">            fa[x][i]=fa[fa[x][i-1]][i-1];</span><br><span class="line">            int tmp[4]=&#123;m[x][i-1],m[fa[x][i-1]][i-1],</span><br><span class="line">                        mm[x][i-1],mm[fa[x][i-1]][i-1]&#125;;</span><br><span class="line">            sort(tmp,tmp+4);</span><br><span class="line">            m[x][i]=tmp[3];</span><br><span class="line">            int ptr=2;</span><br><span class="line">            for(;ptr&gt;=0&amp;&amp;tmp[ptr]==tmp[3];)&#123;--ptr;&#125;</span><br><span class="line">            mm[x][i]=ptr==-1?-INF:tmp[ptr];</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        for(auto&amp; edge:p[x])&#123;</span><br><span class="line">            int v=edge.v,w=edge.w;</span><br><span class="line">            if(v==fno)continue;</span><br><span class="line">            m[v][0]=w;</span><br><span class="line">            dfs(v,x);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int lca(int x,int y)&#123;</span><br><span class="line">        if(dep[x]&gt;dep[y])swap(x,y);</span><br><span class="line">        for(int i=30;i&gt;=0;--i)&#123;</span><br><span class="line">            if(dep[fa[y][i]]&gt;=dep[x])y=fa[y][i];</span><br><span class="line">        &#125;</span><br><span class="line">        if(x==y)return x;</span><br><span class="line">        for(int i=30;i&gt;=0;--i)&#123;</span><br><span class="line">            if(fa[x][i]!=fa[y][i])&#123;</span><br><span class="line">                x=fa[x][i],y=fa[y][i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return fa[x][0];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    int query(int x,int y,int w)&#123;</span><br><span class="line">        int ret=-INF;</span><br><span class="line">        for(int i=30;i&gt;=0;--i)&#123;</span><br><span class="line">            if(dep[fa[x][i]]&gt;=dep[y])&#123;</span><br><span class="line">                if(w!=m[x][i])</span><br><span class="line">                    ret=max(ret,m[x][i]);</span><br><span class="line">                else</span><br><span class="line">                    ret=max(ret,mm[x][i]);</span><br><span class="line">                x=fa[x][i];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        return ret;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Tr tr;</span><br><span class="line"></span><br><span class="line">struct _edge_&#123;</span><br><span class="line">    int u,v,w;</span><br><span class="line">    bool operator&lt;(const _edge_&amp; other)const&#123;return w&lt;other.w;&#125; </span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">vector&lt;_edge_&gt; edges;</span><br><span class="line">int fa[MAXN],n,m,used[MAXM];</span><br><span class="line"></span><br><span class="line">int find(int x)&#123;return fa[x]==x?x:fa[x]=find(fa[x]);&#125;</span><br><span class="line">void unite(int u,int v)&#123;int fu=find(u),fv=find(v);if(fu!=fv)fa[fu]=fv;&#125;</span><br><span class="line"></span><br><span class="line">int kruskal()&#123;</span><br><span class="line">    int ans=0,cnt=0;</span><br><span class="line">    for(int i=1;i&lt;=n;++i)fa[i]=i;</span><br><span class="line">    sort(edges.begin(),edges.end());</span><br><span class="line">    for(int i=0;i&lt;edges.size();++i)&#123;</span><br><span class="line">        _edge_ e=edges[i];</span><br><span class="line">        int u=e.u,v=e.v,w=e.w;</span><br><span class="line">        if(find(u)!=find(v))&#123;</span><br><span class="line">            unite(u,v);</span><br><span class="line">            ans+=w,++cnt;</span><br><span class="line">            used[i]=1;</span><br><span class="line">            tr.add(u,v,w);</span><br><span class="line">        &#125;</span><br><span class="line">        if(cnt==n-1)break;</span><br><span class="line">    &#125;</span><br><span class="line">    return ans;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">signed main()&#123;</span><br><span class="line">    cin&gt;&gt;n&gt;&gt;m;</span><br><span class="line">    for(int i=1;i&lt;=m;++i)&#123;</span><br><span class="line">        int u,v,w;cin&gt;&gt;u&gt;&gt;v&gt;&gt;w;</span><br><span class="line">        edges.push_back(&#123;u,v,w&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">    int ans_1=kruskal(),ans_2=INF;</span><br><span class="line">    tr.dfs(1,0);</span><br><span class="line">    for(int i=0;i&lt;edges.size();++i)&#123;</span><br><span class="line">        if(!used[i])&#123;</span><br><span class="line">            int u=edges[i].u,v=edges[i].v,w=edges[i].w;</span><br><span class="line">            int _lca=tr.lca(u,v);</span><br><span class="line">            int tmp1=tr.query(u,_lca,w);</span><br><span class="line">            int tmp2=tr.query(v,_lca,w);</span><br><span class="line">            int _m=max(tmp1,tmp2);</span><br><span class="line">            if(_m&gt;-INF)</span><br><span class="line">            ans_2=min(ans_2,ans_1-_m+w);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    if(ans_2!=INF)cout&lt;&lt;ans_2&lt;&lt;endl;</span><br><span class="line">    else cout&lt;&lt;-1&lt;&lt;endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/05/23/%E6%9C%80%E7%9F%AD%E8%B7%AF%E9%97%AE%E9%A2%98/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -943,136 +1025,6 @@ class="math inline">\(x_{min}=(x\,mod\,\frac{m}{d}+\frac{m}{d})\,mod\,\frac{m}{d
   
   
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://siyue114.com/2023/04/17/%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.png">
-      <meta itemprop="name" content="Si_Yue">
-      <meta itemprop="description" content="奋斗100天我要当暗影大人">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Si_Yue小屋">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2023/04/17/%E4%B9%98%E6%B3%95%E9%80%86%E5%85%83/" class="post-title-link" itemprop="url">乘法逆元</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2023-04-17 15:15:35 / 修改时间：15:42:13" itemprop="dateCreated datePublished" datetime="2023-04-17T15:15:35+08:00">2023-04-17</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/NT/" itemprop="url" rel="index"><span itemprop="name">NT</span></a>
-                </span>
-            </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h4 id="乘法逆元">乘法逆元</h4>
-<p>线性同余方程<span
-class="math inline">\(ax\equiv1(mod\,b)\)</span></p>
-<p>此时称<span class="math inline">\(x\)</span>为<span
-class="math inline">\(a\)</span>在<span
-class="math inline">\(mod\,b\)</span>意义下的逆元，记作<span
-class="math inline">\(a^{-1}\)</span></p>
-<p>求法</p>
-<ol type="1">
-<li><span class="math inline">\((a,b)=1\)</span></li>
-</ol>
-<p>可用扩展欧几里得算法（exgcd），求<span
-class="math inline">\(xa+yb=1\)</span>的解即可</p>
-<ol start="2" type="1">
-<li><span class="math inline">\((a,b)=1\)</span>且b为质数</li>
-</ol>
-<p><span
-class="math inline">\(ax\equiv1\equiv{a^{b-1}}(mod\,b)\)</span></p>
-<p><span class="math inline">\(x\equiv{a^{b-2}}\)</span></p>
-<p>可用快速幂</p>
-<ol start="3" type="1">
-<li>线性求逆元</li>
-</ol>
-<p><strong>1~n</strong></p>
-<p>这里指的是1到n的逆元一起求，显然用之前的方法会有可能超时</p>
-<p>这里用递推式解决</p>
-<p>设求1到n在<span
-class="math inline">\(mod\,p\)</span>的逆元，p是大质数</p>
-<p><span
-class="math inline">\(p=ki+j,k=\frac{p}{i},j=p\,mod\,i\)</span></p>
-<p>则有<span class="math inline">\(ki+j\equiv0(mod\,p)\)</span></p>
-<p>同乘<span class="math inline">\(i^{-1}\times{j^{-1}}\)</span></p>
-<p>得到<span class="math inline">\(i^{-1} \equiv-k j^{-1}(\bmod
-p)\)</span></p>
-<p>即<span class="math inline">\(i^{-1}
-\equiv-\left\lfloor\frac{p}{i}\right\rfloor(p \bmod i)^{-1}(\bmod
-p)\)</span></p>
-<p>考虑到<span
-class="math inline">\(p\,mod\,i&lt;i\)</span>，可以用递推解决 <span
-class="math display">\[
-i^{-1}\equiv\left\{
-    \begin{array}{**lr**}
-    1,&amp;if\,i=1\\
-    -[\frac{p}{i}](p\,mod\,i)^{-1},&amp;otherwise.
-    \end{array}
-\right.\;\;\;\;\;(mod\;p)
-\]</span> 代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">inv[<span class="number">1</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">2</span>; i &lt;= n; ++i) &#123;</span><br><span class="line">  inv[i] = (<span class="type">long</span> <span class="type">long</span>)(p - p / i) * inv[p % i] % p;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><strong>任意n个数的逆元</strong></p>
-<p>可以用前缀积去处理</p>
-<p>假设我们要求<span
-class="math inline">\(A=\{a_1,a_2,...,a_n\}\)</span>的逆元</p>
-<p>我们处理出前缀积<span
-class="math inline">\(S=\{s_1,s_2,...,s_n\}\)</span></p>
-<p>求<span class="math inline">\(s_n\)</span>的逆元<span
-class="math inline">\(sv_n\)</span>，<span
-class="math inline">\(sv_n\)</span>乘<span
-class="math inline">\(a_n\)</span>为<span
-class="math inline">\(sv_{n-1}\)</span>，同理处理出所有<span
-class="math inline">\(sv_i\)</span></p>
-<p>故<span class="math inline">\(a_i^{-1}=sv_i*s_{i-1}\)</span></p>
-<p>代码</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">s[<span class="number">0</span>] = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) s[i] = s[i - <span class="number">1</span>] * a[i] % p;</span><br><span class="line">sv[n] = <span class="built_in">qpow</span>(s[n], p - <span class="number">2</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = n; i &gt;= <span class="number">1</span>; --i) sv[i - <span class="number">1</span>] = sv[i] * a[i] % p;</span><br><span class="line"><span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">1</span>; i &lt;= n; ++i) inv[i] = sv[i] * s[i - <span class="number">1</span>] % p;</span><br></pre></td></tr></table></figure>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
 
   
   <nav class="pagination">
@@ -1144,7 +1096,7 @@ class="math inline">\(sv_i\)</span></p>
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">27</span>
+          <span class="site-state-item-count">28</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -1157,7 +1109,7 @@ class="math inline">\(sv_i\)</span></p>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">26</span>
+        <span class="site-state-item-count">27</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -1192,7 +1144,7 @@ class="math inline">\(sv_i\)</span></p>
 <div class="copyright">
   
   &copy; 2023-04 – 
-  <span itemprop="copyrightYear">2023</span>
+  <span itemprop="copyrightYear">2024</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
